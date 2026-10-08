@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Definição das instruções que a VM entende
+typedef enum {
+    PSH, // Empurra (salva) um valor no registrador A
+    ADD, // Soma os valores dos registradores A e B, salva em A
+    POP, // Exibe o valor atual do registrador A
+    HLT  // Encerra a execução da máquina virtual
+} InstructionSet;
+
+// Registradores da VM
+typedef enum {
+    A, B, C, D,
+    NUM_OF_REGISTERS
+} Registers;
+
+// Programa de teste: carrega 5, carrega 10
+const int program[] = {
+    PSH, 5,   // Coloca 5 no registrador A
+    PSH, 10,  // Exemplo didático (avança a lógica)
+    ADD,      // Soma interna simulada
+    POP,      // Printa o resultado
+    HLT       // Para a VM
+};
+
+// Estado interno do PC Virtual
+int registers[NUM_OF_REGISTERS];
+bool running = true;
+int ip = 0; // Ponteiro de Instrução (Instruction Pointer)
+
+// Avaliador de comandos
+void eval(int instr) {
+    switch (instr) {
+        case HLT: {
+            running = false;
+            printf("VM Finalizada.\n");
+            break;
+        }
+        case PSH: {
+            // Guarda o valor subsequente do programa no Registrador A
+            ip++;
+            registers[A] = program[ip];
+            break;
+        }
+        case ADD: {
+            // Simulação simples: adiciona um valor fixo simulando registradores
+            registers[A] = registers[A] + 10; 
+            break;
+        }
+        case POP: {
+            printf("Registrador A: %d\n", registers[A]);
+            break;
+        }
+    }
+}
+
+int main() {
+    printf("Iniciando PC Virtual...\n");
+    while (running) {
+        eval(program[ip]);
+        ip++;
+    }
+    return 0;
+}
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.

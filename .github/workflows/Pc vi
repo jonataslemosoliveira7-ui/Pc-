@@ -15,7 +15,7 @@ typedef enum {
     NUM_OF_REGISTERS
 } Registers;
 
-// Programa de teste: carrega 5, carrega 10, soma e exibe o resultado
+   uses: actions/checkout@v4
 const int program[] = {
     PSH, 5,   // Coloca 5 no registrador A
     PSH, 10,  // Exemplo didático (avança a lógica)
